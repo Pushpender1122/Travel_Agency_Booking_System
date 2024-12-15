@@ -9,48 +9,115 @@ const PackageDetails = () => {
         name: '',
         email: '',
         phone: '',
-        travelers: 1,
-        requests: '',
+        numberOfTravelers: 1,
+        specialRequests: '',
+        selectedDate: '',
     });
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/api/packages/${id}`).then((response) => {
-            setPackageDetails(response.data);
-        });
+        axios
+            .get(`${import.meta.env.VITE_SERVER_URL}/packages/${id}`)
+            .then((response) => setPackageDetails(response.data))
+            .catch((error) => console.error('Error fetching package details:', error));
     }, [id]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const totalPrice = formData.numberOfTravelers * packageDetails.price;
         axios
-            .post('http://localhost:5000/api/bookings', { ...formData, packageId: id })
-            .then((response) => alert('Booking successful!'))
-            .catch((error) => alert('Error booking package.'));
+            .post(`${import.meta.env.VITE_SERVER_URL}/bookings`, {
+                ...formData,
+                packageId: id,
+                totalPrice,
+            })
+            .then(() => alert('Booking successful!'))
+            .catch(() => alert('Error booking package.'));
     };
 
     return (
-        <div className="p-8">
-            <h1 className="text-3xl font-bold mb-4">{packageDetails.title}</h1>
-            <img src={packageDetails.image} alt={packageDetails.title} className="h-80 w-full object-cover rounded mb-4" />
-            <p>{packageDetails.description}</p>
-            <p className="font-bold">Price: ${packageDetails.price}</p>
-            <form onSubmit={handleSubmit} className="mt-4">
-                <input
-                    type="text"
-                    placeholder="Name"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                />
-                <input
-                    type="email"
-                    placeholder="Email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                />
-                {/* Additional fields */}
-                <button className="bg-blue-500 text-white px-4 py-2 rounded">Book Now</button>
-            </form>
+        <div className="max-w-4xl mx-auto p-8 bg-white rounded shadow">
+            {packageDetails.title ? (
+                <>
+                    <h1 className="text-4xl font-bold mb-4 text-blue-600">{packageDetails.title}</h1>
+                    <img
+                        src={packageDetails.image}
+                        alt={packageDetails.title}
+                        className="h-96 w-full object-cover rounded-lg mb-6"
+                    />
+                    <div className="text-gray-700 space-y-4">
+                        <p className="text-lg">{packageDetails.description}</p>
+                        <p className="text-xl font-semibold">Price per traveler: ${packageDetails.price}</p>
+                        <p className="text-md">Available Dates: {packageDetails.availableDates?.join(', ') || 'Not specified'}</p>
+                    </div>
+
+                    <h2 className="text-2xl font-bold mt-8 mb-4 text-gray-800">Book This Package</h2>
+                    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input
+                            type="text"
+                            placeholder="Name"
+                            required
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            className="p-3 border rounded shadow-sm focus:ring-2 focus:ring-blue-300"
+                        />
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            required
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            className="p-3 border rounded shadow-sm focus:ring-2 focus:ring-blue-300"
+                        />
+                        <input
+                            type="text"
+                            placeholder="Phone"
+                            required
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            className="p-3 border rounded shadow-sm focus:ring-2 focus:ring-blue-300"
+                        />
+                        <input
+                            type="number"
+                            placeholder="Number of Travelers"
+                            required
+                            min="1"
+                            value={formData.numberOfTravelers}
+                            onChange={(e) => setFormData({ ...formData, numberOfTravelers: e.target.value })}
+                            className="p-3 border rounded shadow-sm focus:ring-2 focus:ring-blue-300"
+                        />
+                        <select
+                            required
+                            value={formData.selectedDate}
+                            onChange={(e) => setFormData({ ...formData, selectedDate: e.target.value })}
+                            className="p-3 border rounded shadow-sm focus:ring-2 focus:ring-blue-300"
+                        >
+                            <option value="" disabled>
+                                Select a Date
+                            </option>
+                            {packageDetails.availableDates?.map((date, index) => (
+                                <option key={index} value={date}>
+                                    {date}
+                                </option>
+                            ))}
+                        </select>
+                        <textarea
+                            placeholder="Special Requests"
+                            value={formData.specialRequests}
+                            onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
+                            className="p-3 border rounded shadow-sm focus:ring-2 focus:ring-blue-300 col-span-2"
+                        ></textarea>
+
+                        <button
+                            type="submit"
+                            className="col-span-2 bg-blue-600 text-white font-bold py-3 rounded shadow hover:bg-blue-700 transition"
+                        >
+                            Book Now
+                        </button>
+                    </form>
+                </>
+            ) : (
+                <p className="text-center text-gray-500">Loading package details...</p>
+            )}
         </div>
     );
 };
