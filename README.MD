@@ -57,3 +57,11 @@ bookingSystem_Inceptioners/
    cd ../server
    npm start
    ```
+
+# Features
+
+1. Admin can add, delete, and edit packages.
+2. Users can book their travel details.
+3. Pagination is implemented for packages.
+4. Admin authentication is implemented.
+5. Pdf generation of the booking details.
