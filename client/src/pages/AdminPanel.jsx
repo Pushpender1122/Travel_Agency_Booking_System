@@ -36,7 +36,7 @@ const AdminPage = () => {
         return Promise.reject(error);
     });
     const fetchPackages = async () => {
-        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/packages`);
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/admin/packages`);
         setPackages(response.data);
     };
 
@@ -46,11 +46,11 @@ const AdminPage = () => {
 
         if (editId) {
             // Update Package
-            await axios.put(`${import.meta.env.VITE_SERVER_URL}/packages/${editId}`, formData);
+            await axios.put(`${import.meta.env.VITE_SERVER_URL}/admin/packages/${editId}`, formData);
             setEditId(null);
         } else {
             // Add New Package
-            await axios.post(`${import.meta.env.VITE_SERVER_URL}/packages`, formData);
+            await axios.post(`${import.meta.env.VITE_SERVER_URL}/admin/packages`, formData);
         }
 
         setFormData({ title: "", description: "", price: "", availableDates: [], image: "" });
@@ -91,7 +91,7 @@ const AdminPage = () => {
 
     // Delete a Package
     const handleDelete = async (id) => {
-        await axios.delete(`${import.meta.env.VITE_SERVER_URL}/packages/${id}`);
+        await axios.delete(`${import.meta.env.VITE_SERVER_URL}/admin/packages/${id}`);
         fetchPackages();
     };
 

@@ -19,7 +19,7 @@ mongoose.connect(process.env.MONGO_URL, {
 });
 
 // Routes
-app.use('/admin', authMiddleware, adminAuthMiddleware, adminRoutes);
+app.use('/api/admin', authMiddleware, adminAuthMiddleware, adminRoutes);
 //user
 app.use('/api', packageRoutes);
 app.use('/api', authRoute)
