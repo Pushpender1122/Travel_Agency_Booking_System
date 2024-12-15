@@ -9,7 +9,7 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
         if (email === 'admin@gmail.com' && password === 'admin') {
-            const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+            const token = jwt.sign({ role: 'admin' }, process.env.JWT_SECRET, { // That is not the good way to sign the token use the id of the user
                 expiresIn: '1h',
             });
             res.status(200).json({ token });

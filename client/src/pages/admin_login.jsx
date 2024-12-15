@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -8,6 +8,17 @@ const AdminLogin = () => {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const token = localStorage.getItem("adminToken");
+        console.log(token);
+        if (token) {
+            navigate("/");
+            return
+        }
+    }, []);
+
+    // Clear token from localStorage
+    localStorage.removeItem("adminToken");
     const handleLogin = async (e) => {
         e.preventDefault();
         setError("");

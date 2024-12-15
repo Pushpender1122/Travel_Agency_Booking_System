@@ -4,10 +4,11 @@ const adminRoutes = require('./routes/adminRoutes');
 const cors = require('cors');
 const packageRoutes = require('./routes/packageRoute');
 const authRoute = require('./routes/authRoute');
+const { authMiddleware, adminAuthMiddleware } = require('./middlewares/authMiddlewares');
 const app = express();
-const PORT = 5000;
 const dotenv = require('dotenv');
 dotenv.config();
+const PORT = 5000;
 // Middleware
 app.use(express.json());
 app.use(cors());
@@ -18,7 +19,7 @@ mongoose.connect(process.env.MONGO_URL, {
 });
 
 // Routes
-app.use('/admin', adminRoutes);
+app.use('/admin', authMiddleware, adminAuthMiddleware, adminRoutes);
 //user
 app.use('/api', packageRoutes);
 app.use('/api', authRoute)
