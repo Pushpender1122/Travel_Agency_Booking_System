@@ -5,13 +5,31 @@ const fs = require('fs');
 const path = require('path');
 // Get all packages (user view)
 const getAllPackages = async (req, res) => {
+    const { page = 1, limit = 10 } = req.query; // Default values: page 1, limit 10
+
     try {
-        const packages = await Package.find();
-        res.status(200).json(packages);
+        // Calculate the number of documents to skip
+        const skip = (page - 1) * limit;
+
+        // Fetch packages with pagination
+        const packages = await Package.find()
+            .skip(skip) // Skip the documents for previous pages
+            .limit(parseInt(limit)); // Limit the number of documents fetched
+
+        // Get the total count of documents
+        const totalPackages = await Package.countDocuments();
+
+        res.status(200).json({
+            data: packages,
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(totalPackages / limit),
+            totalPackages,
+        });
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch packages' });
     }
 };
+
 
 // Get details of a specific package
 const getPackageById = async (req, res) => {
