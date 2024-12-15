@@ -21,17 +21,28 @@ const PackageDetails = () => {
             .catch((error) => console.error('Error fetching package details:', error));
     }, [id]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const totalPrice = formData.numberOfTravelers * packageDetails.price;
-        axios
-            .post(`${import.meta.env.VITE_SERVER_URL}/bookings`, {
+        const response = await axios.post(
+            `${import.meta.env.VITE_SERVER_URL}/bookings`,
+            {
                 ...formData,
                 packageId: id,
                 totalPrice,
-            })
-            .then(() => alert('Booking successful!'))
-            .catch(() => alert('Error booking package.'));
+            },
+            {
+                responseType: 'blob', // Specify that the response is a blob
+            }
+        );
+
+        const url = window.URL.createObjectURL(new Blob([response.data])); // Create a URL for the blob
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'invoice.pdf'; // Set the file name
+        document.body.appendChild(a);
+        a.click();
+        a.remove(); // Clean up
     };
 
     return (

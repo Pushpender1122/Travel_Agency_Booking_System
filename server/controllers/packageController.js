@@ -1,6 +1,8 @@
 const Package = require('../models/Package');
 const Booking = require('../models/Booking');
-
+const { PDFDocument, rgb } = require('pdf-lib');
+const fs = require('fs');
+const path = require('path');
 // Get all packages (user view)
 const getAllPackages = async (req, res) => {
     try {
@@ -53,21 +55,32 @@ const bookPackage = async (req, res) => {
 
         await newBooking.save();
 
-        // Generate a basic invoice (HTML response for now)
-        const invoice = `
-      <h1>Invoice</h1>
-      <p><strong>Customer Name:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Phone:</strong> ${phone}</p>
-      <p><strong>Package:</strong> ${packageDetails.title}</p>
-      <p><strong>Number of Travelers:</strong> ${numberOfTravelers}</p>
-        <p><strong>Date:</strong> ${date}</p>
-      <p><strong>Total Price:</strong> $${totalPrice}</p>
-      <p><strong>Special Requests:</strong> ${specialRequests || 'None'}</p>
-    `;
+        // Generate PDF invoice
+        const pdfDoc = await PDFDocument.create();
+        const page = pdfDoc.addPage([600, 400]);
 
-        res.status(201).json({ message: 'Booking successful', invoice });
+        // Add content to the PDF
+        page.drawText('Invoice', { x: 50, y: 350, size: 20, color: rgb(0, 0.53, 0.8) });
+        page.drawText(`Customer Name: ${name}`, { x: 50, y: 300, size: 12 });
+        page.drawText(`Email: ${email}`, { x: 50, y: 280, size: 12 });
+        page.drawText(`Phone: ${phone}`, { x: 50, y: 260, size: 12 });
+        page.drawText(`Package: ${packageDetails.title}`, { x: 50, y: 240, size: 12 });
+        page.drawText(`Number of Travelers: ${numberOfTravelers}`, { x: 50, y: 220, size: 12 });
+        page.drawText(`Date: ${date}`, { x: 50, y: 200, size: 12 });
+        page.drawText(`Special Requests: ${specialRequests || 'None'}`, { x: 50, y: 180, size: 12 });
+        page.drawText(`Total Price: $${totalPrice}`, { x: 50, y: 160, size: 12 });
+
+        // Save PDF as bytes
+        const pdfBytes = await pdfDoc.save();
+
+        // Set response headers to trigger download
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="invoice-${newBooking._id}.pdf"`);
+
+        // Send the PDF file to the client
+        res.status(200).send(Buffer.from(pdfBytes));
     } catch (error) {
+        console.error('Error during booking:', error);
         res.status(500).json({ error: 'Failed to book package' });
     }
 };
