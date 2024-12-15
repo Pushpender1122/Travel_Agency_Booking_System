@@ -6,7 +6,7 @@ const bookingSchema = new mongoose.Schema({
     email: { type: String, required: true },
     phone: { type: String, required: true },
     numberOfTravelers: { type: Number, required: true },
-    specialRequests: { type: String },
+    specialRequests: { type: String, default: 'None' },
     totalPrice: { type: Number, required: true },
     date: { type: Date, default: Date.now },
 });

@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const adminRoutes = require('./routes/adminRoutes');
 const cors = require('cors');
 const packageRoutes = require('./routes/packageRoute');
+const authRoute = require('./routes/authRoute');
 const app = express();
 const PORT = 5000;
 const dotenv = require('dotenv');
@@ -18,10 +19,9 @@ mongoose.connect(process.env.MONGO_URL, {
 
 // Routes
 app.use('/admin', adminRoutes);
-
 //user
 app.use('/api', packageRoutes);
-
+app.use('/api', authRoute)
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

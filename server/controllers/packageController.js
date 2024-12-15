@@ -27,7 +27,7 @@ const getPackageById = async (req, res) => {
 
 // Book a package
 const bookPackage = async (req, res) => {
-    const { packageId, name, email, phone, numberOfTravelers, specialRequests } = req.body;
+    const { packageId, name, email, phone, numberOfTravelers, specialRequests, date } = req.body;
 
     try {
         // Fetch the package details
@@ -48,6 +48,7 @@ const bookPackage = async (req, res) => {
             numberOfTravelers,
             specialRequests,
             totalPrice,
+            date,
         });
 
         await newBooking.save();
@@ -60,6 +61,7 @@ const bookPackage = async (req, res) => {
       <p><strong>Phone:</strong> ${phone}</p>
       <p><strong>Package:</strong> ${packageDetails.title}</p>
       <p><strong>Number of Travelers:</strong> ${numberOfTravelers}</p>
+        <p><strong>Date:</strong> ${date}</p>
       <p><strong>Total Price:</strong> $${totalPrice}</p>
       <p><strong>Special Requests:</strong> ${specialRequests || 'None'}</p>
     `;
