@@ -28,7 +28,7 @@ bookingSystem_Inceptioners/
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/pushender1122/Travel_Agency_Booking_System.git
+   git clone https://github.com/Pushpender1122/Travel_Agency_Booking_System.git
    ```
 
 2. Navigate to the `client` directory and install dependencies:
