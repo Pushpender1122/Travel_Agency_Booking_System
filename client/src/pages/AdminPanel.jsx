@@ -99,6 +99,7 @@ const AdminPage = () => {
     };
 
     const handleEdit = (pkg) => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
         setEditId(pkg._id);
         setFormData({
             title: pkg.title,
@@ -122,62 +123,55 @@ const AdminPage = () => {
             <div className="bg-white p-6 rounded shadow-md mb-8">
                 <h2 className="text-2xl font-bold mb-4">{editId ? "Edit Package" : "Add Package"}</h2>
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Form fields */}
                     <div>
-                        <label htmlFor="title" className="block font-medium text-gray-700 mb-1">
-                            Title
-                        </label>
+                        <label htmlFor="title" className="block font-medium text-gray-700 mb-1">Title</label>
                         <input
                             type="text"
                             id="title"
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                             className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter package title"
                             required
                         />
                     </div>
                     <div>
-                        <label htmlFor="price" className="block font-medium text-gray-700 mb-1">
-                            Price
-                        </label>
+                        <label htmlFor="price" className="block font-medium text-gray-700 mb-1">Price</label>
                         <input
                             type="number"
                             id="price"
                             value={formData.price}
                             onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                             className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter price"
                             required
                         />
                     </div>
                     <div>
-                        <label htmlFor="image" className="block font-medium text-gray-700 mb-1">
-                            Image URL
-                        </label>
+                        <label htmlFor="image" className="block font-medium text-gray-700 mb-1">Image URL</label>
                         <input
                             type="text"
                             id="image"
                             value={formData.image}
                             onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                             className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter image URL"
                             required
                         />
                     </div>
                     <div className="col-span-1 md:col-span-2">
-                        <label htmlFor="description" className="block font-medium text-gray-700 mb-1">
-                            Description
-                        </label>
+                        <label htmlFor="description" className="block font-medium text-gray-700 mb-1">Description</label>
                         <textarea
                             id="description"
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                             className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter description"
                             required
                         />
                     </div>
                     <div className="col-span-1 md:col-span-2">
-                        <label htmlFor="dates" className="block font-medium text-gray-700 mb-1">
-                            Available Dates
-                        </label>
+                        <label htmlFor="dates" className="block font-medium text-gray-700 mb-1">Available Dates</label>
                         <div className="flex gap-2">
                             <input
                                 type="date"
@@ -185,6 +179,7 @@ const AdminPage = () => {
                                 value={newDate}
                                 onChange={(e) => setNewDate(e.target.value)}
                                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter a date (e.g., 2024-12-25)"
                             />
                             <button
                                 type="button"
@@ -193,6 +188,23 @@ const AdminPage = () => {
                             >
                                 Add
                             </button>
+                        </div>
+                        <div className="flex gap-2 mt-2 flex-wrap">
+                            {formData.availableDates.map((date, index) => (
+                                <span
+                                    key={index}
+                                    className="bg-gray-200 text-gray-800 px-2 py-1 rounded flex items-center gap-2"
+                                >
+                                    {date}
+                                    <button
+                                        type="button"
+                                        onClick={() => removeDate(date)}
+                                        className="text-red-500 hover:text-red-700"
+                                    >
+                                        &times;
+                                    </button>
+                                </span>
+                            ))}
                         </div>
                     </div>
                     <div className="col-span-1 md:col-span-2">
@@ -205,6 +217,7 @@ const AdminPage = () => {
                     </div>
                 </form>
             </div>
+
 
             {/* Display Existing Packages */}
             <div>
@@ -224,6 +237,20 @@ const AdminPage = () => {
                                 <span className="font-bold">Available Dates: </span>
                                 {pkg.availableDates.join(", ")}
                             </p>
+                            <div className="flex gap-2 mt-4">
+                                <button
+                                    onClick={() => handleEdit(pkg)}
+                                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(pkg._id)}
+                                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                                >
+                                    Delete
+                                </button>
+                            </div>
                         </div>
                     ))}
                 </div>
