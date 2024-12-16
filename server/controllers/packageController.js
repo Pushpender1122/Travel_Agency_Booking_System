@@ -47,8 +47,7 @@ const getPackageById = async (req, res) => {
 
 // Book a package
 const bookPackage = async (req, res) => {
-    const { packageId, name, email, phone, numberOfTravelers, specialRequests, date } = req.body;
-
+    const { packageId, name, email, phone, numberOfTravelers, specialRequests, selectedDate } = req.body;
     try {
         // Fetch the package details
         const packageDetails = await Package.findById(packageId);
@@ -68,11 +67,10 @@ const bookPackage = async (req, res) => {
             numberOfTravelers,
             specialRequests,
             totalPrice,
-            date,
+            date: selectedDate,
         });
 
         await newBooking.save();
-
         // Generate PDF invoice
         const pdfDoc = await PDFDocument.create();
         const page = pdfDoc.addPage([600, 400]);
@@ -84,7 +82,7 @@ const bookPackage = async (req, res) => {
         page.drawText(`Phone: ${phone}`, { x: 50, y: 260, size: 12 });
         page.drawText(`Package: ${packageDetails.title}`, { x: 50, y: 240, size: 12 });
         page.drawText(`Number of Travelers: ${numberOfTravelers}`, { x: 50, y: 220, size: 12 });
-        page.drawText(`Date: ${date}`, { x: 50, y: 200, size: 12 });
+        page.drawText(`Date: ${selectedDate}`, { x: 50, y: 200, size: 12 });
         page.drawText(`Special Requests: ${specialRequests || 'None'}`, { x: 50, y: 180, size: 12 });
         page.drawText(`Total Price: $${totalPrice}`, { x: 50, y: 160, size: 12 });
 
