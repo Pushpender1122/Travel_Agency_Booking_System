@@ -34,7 +34,7 @@ const Navbar = () => {
                         to="/admin"
                         className="bg-white text-blue-500 px-4 py-2 rounded hover:bg-gray-200 transition"
                     >
-                        Add Package
+                        Admin Page
                     </Link>
                 </div>
 
@@ -76,7 +76,7 @@ const Navbar = () => {
                                 to="/admin"
                                 className="block py-2 px-4 bg-white text-blue-500 rounded hover:bg-gray-200"
                             >
-                                Add Package
+                                Admin Page
                             </Link>
                         </li>
                     </ul>

@@ -9,7 +9,7 @@ const PackageDetails = () => {
         name: '',
         email: '',
         phone: '',
-        numberOfTravelers: 1,
+        numberOfTravelers: 0,
         specialRequests: '',
         selectedDate: '',
     });
@@ -92,7 +92,7 @@ const PackageDetails = () => {
                             placeholder="Number of Travelers"
                             required
                             min="1"
-                            value={formData.numberOfTravelers}
+                            value={formData.numberOfTravelers > 0 ? formData.numberOfTravelers : ''}
                             onChange={(e) => setFormData({ ...formData, numberOfTravelers: e.target.value })}
                             className="p-3 border rounded shadow-sm focus:ring-2 focus:ring-blue-300"
                         />

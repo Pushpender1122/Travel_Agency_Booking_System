@@ -6,17 +6,15 @@ const packageRoutes = require('./routes/packageRoute');
 const authRoute = require('./routes/authRoute');
 const { authMiddleware, adminAuthMiddleware } = require('./middlewares/authMiddlewares');
 const app = express();
+const { connectDB } = require('./db/db');
 const dotenv = require('dotenv');
 dotenv.config();
-const PORT = 5000;
+const PORT = 5000 || process.env.PORT;
 // Middleware
 app.use(express.json());
 app.use(cors());
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+connectDB();
 
 // Routes
 app.use('/api/admin', authMiddleware, adminAuthMiddleware, adminRoutes);

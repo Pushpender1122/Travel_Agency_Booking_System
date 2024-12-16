@@ -65,3 +65,4 @@ bookingSystem_Inceptioners/
 3. Pagination is implemented for packages.
 4. Admin authentication is implemented.
 5. Pdf generation of the booking details.
+6. Admin can view the booking details of the users.
